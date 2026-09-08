@@ -5,6 +5,14 @@
 
 using namespace std;
 
+bool validarRango(int numero, int min, int max) {
+    if (numero < min || numero > max) {
+        cout << "[!] El numero debe estar entre " << min << " y " << max << ".\n\n";
+        return false;
+    }
+    return true;
+}
+
 int pedirNumero(int min, int max) {
     int numero = 0;
 
@@ -12,15 +20,7 @@ int pedirNumero(int min, int max) {
         cout << "Ingresa un numero para adivinar (" << min << " - " << max << "): ";
         cin >> numero;
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(10000, '\n');
-            cout << "[!] Entrada invalida. Por favor, ingresa un numero entero.\n\n";
-            continue;
-        }
-
-        if (numero < min || numero > max) {
-            cout << "[!] El numero debe estar entre " << min << " y " << max << ".\n\n";
+        if (!validarRango(numero, min, max)) {
             continue;
         }
 

@@ -5,6 +5,14 @@
 
 using namespace std;
 
+bool validarRango(int numero, int min, int max) {
+    if (numero < min || numero > max) {
+        cout << "[!] El numero debe estar entre " << min << " y " << max << ".\n\n";
+        return false;
+    }
+    return true;
+}
+
 int pedirNumero(int min, int max) {
     int numero = 0;
 
@@ -12,15 +20,7 @@ int pedirNumero(int min, int max) {
         cout << "Ingresa un numero (" << min << " - " << max << "): ";
         cin >> numero;
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(10000, '\n');
-            cout << "[!] Entrada invalida. Por favor, ingresa un numero entero.\n\n";
-            continue;
-        }
-
-        if (numero < min || numero > max) {
-            cout << "[!] El numero debe estar entre " << min << " y " << max << ".\n\n";
+        if (!validarRango(numero, min, max)) {
             continue;
         }
 
@@ -36,18 +36,9 @@ Conjunto pedirConjuntoPrueba() {
         cout << "Cuantos numeros tendra tu conjunto de prueba?: ";
         cin >> cantidad;
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(10000, '\n');
-            cout << "[!] Entrada invalida. Por favor, ingresa un numero entero.\n\n";
+        if (!validarRango(cantidad, 1, TAM)) {
             continue;
         }
-
-        if (cantidad <= 0 || cantidad > TAM) {
-            cout << "[!] La cantidad debe ser entre 1 y " << TAM << ".\n\n";
-            continue;
-        }
-
         break;
     }
 
@@ -90,13 +81,6 @@ void iniciarJuego() {
         cout << "Elige una opcion (1 o 2): ";
         int opcion = 0;
         cin >> opcion;
-
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(10000, '\n');
-            cout << "[!] Entrada invalida.\n\n";
-            continue;
-        }
 
         if (opcion == 1) {
             int intento = pedirNumero(0, TAM - 1);
