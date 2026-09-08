@@ -1,0 +1,31 @@
+# Salidas de compilación y binarios
+out/
+bin/
+build/
+*.exe
+*.out
+
+# Objetos y librerías intermedias
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+
+# Archivos de depuración y temporales
+*.pdb
+*.ilk
+*.dSYM/
+*.log
+
+# Configuraciones de editores / IDEs
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Archivos del sistema operativo
+Thumbs.db
+[Dd]esktop.ini
+.DS_Store
