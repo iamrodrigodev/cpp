@@ -5,44 +5,40 @@ using namespace std;
 
 Conjunto::Conjunto() {
     cantidad = 0;
-    for (int i = 0; i < TAM; i++) {
-        elementos[i] = false;
-    }
 }
 
 bool Conjunto::insertar(int elemento) {
-    if (elemento < 0 || elemento >= TAM) {
+    if (elemento < 0 || elemento >= TAM || cantidad >= TAM) {
         return false;
     }
 
-    if (elementos[elemento]) {
+    if (existe(elemento)) {
         return false;
     }
 
-    elementos[elemento] = true;
+    numeros[cantidad] = elemento;
     cantidad++;
     return true;
 }
 
 bool Conjunto::remover(int elemento) {
-    if (elemento < 0 || elemento >= TAM) {
-        return false;
+    for (int i = 0; i < cantidad; i++) {
+        if (numeros[i] == elemento) {
+            numeros[i] = numeros[cantidad - 1];
+            cantidad--;
+            return true;
+        }
     }
-
-    if (!elementos[elemento]) {
-        return false;
-    }
-
-    elementos[elemento] = false;
-    cantidad--;
-    return true;
+    return false;
 }
 
 bool Conjunto::existe(int elemento) const {
-    if (elemento < 0 || elemento >= TAM) {
-        return false;
+    for (int i = 0; i < cantidad; i++) {
+        if (numeros[i] == elemento) {
+            return true;
+        }
     }
-    return elementos[elemento];
+    return false;
 }
 
 int Conjunto::tamanho() const {
@@ -55,14 +51,10 @@ bool Conjunto::esta_vazio() const {
 
 void Conjunto::imprimir() const {
     cout << "{ ";
-    bool primero = true;
-    for (int i = 0; i < TAM; i++) {
-        if (elementos[i]) {
-            if (!primero) {
-                cout << ", ";
-            }
-            cout << i;
-            primero = false;
+    for (int i = 0; i < cantidad; i++) {
+        cout << numeros[i];
+        if (i < cantidad - 1) {
+            cout << ", ";
         }
     }
     cout << " }" << endl;

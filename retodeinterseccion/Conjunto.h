@@ -5,7 +5,7 @@ const int TAM = 100;
 
 class Conjunto {
 private:
-    bool elementos[TAM];
+    int numeros[TAM];
     int cantidad;
 
 public:
