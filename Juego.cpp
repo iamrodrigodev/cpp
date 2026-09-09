@@ -42,9 +42,11 @@ Conjunto pedirConjuntoPrueba() {
         break;
     }
 
-    for (int i = 0; i < cantidad; i++) {
+    while (prueba.tamanho() < cantidad) {
         int num = pedirNumero(0, TAM - 1);
-        prueba.insertar(num);
+        if (!prueba.insertar(num)) {
+            cout << "[!] Ese numero ya fue ingresado en el conjunto.\n\n";
+        }
     }
 
     return prueba;
