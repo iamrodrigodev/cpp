@@ -57,14 +57,14 @@ void generarConjuntoSecreto(Conjunto& conjunto, int cantidad) {
     }
 }
 
-void mostrarEstado(int restantes, int intentos, int pistas) {
-    cout << "Numeros restantes: " << restantes << " | Intentos: " << intentos << " | Pistas restantes: " << pistas << "\n";
+void mostrarEstado(int restantes, int intentos) {
+    cout << "Numeros secretos restantes: " << restantes << " | Intentos de adivinanza: " << intentos << "\n";
 }
 
-void mostrarMenu() {
+void mostrarMenu(int oportunidadesInterseccion) {
     cout << "1. Adivinar un numero\n";
-    cout << "2. Usar Interseccion con Conjunto de Prueba\n";
-    cout << "3. Usar Diferencia con Conjunto de Prueba (Regla < 10%)\n";
+    cout << "2. Reto de interseccion (" << oportunidadesInterseccion << " oportunidades)\n";
+    cout << "3. Reto de diferencia\n";
     cout << "4. Salir del juego\n";
     cout << "Elige una opcion (1 - 4): ";
 }
@@ -82,9 +82,9 @@ void ejecutarAdivinanza(Conjunto& secreto, int& intentos) {
     }
 }
 
-void ejecutarInterseccion(const Conjunto& secreto, int& pistasRestantes) {
-    if (pistasRestantes <= 0) {
-        cout << "\n[!] Ya no te quedan pistas disponibles para esta partida.\n\n";
+void ejecutarInterseccion(const Conjunto& secreto, int& oportunidades, bool& condicionDiferencia) {
+    if (oportunidades <= 0) {
+        cout << "\n[!] Ya no puedes utilizar el reto de interseccion. Has agotado tus 3 oportunidades.\n\n";
         return;
     }
 
@@ -92,43 +92,52 @@ void ejecutarInterseccion(const Conjunto& secreto, int& pistasRestantes) {
     Conjunto prueba = pedirConjuntoPrueba();
     Conjunto inter = secreto.interseccion(prueba);
 
-    cout << "\nResultado de la pista:\n";
-    cout << "Interseccion (S n P): ";
+    cout << "\nInterseccion (S n P): ";
     inter.imprimir();
-
-    pistasRestantes--;
-    cout << "Pistas restantes: " << pistasRestantes << "\n\n";
-}
-
-void ejecutarDiferencia(const Conjunto& secreto, int& pistasRestantes) {
-    if (pistasRestantes <= 0) {
-        cout << "\n[!] Ya no te quedan pistas disponibles para esta partida.\n\n";
-        return;
-    }
-
-    cout << "\nDefine tu Conjunto de Prueba P:\n";
-    Conjunto prueba = pedirConjuntoPrueba();
-    Conjunto inter = secreto.interseccion(prueba);
 
     int aciertos = inter.tamanho();
     double porcentaje = (double)aciertos / prueba.tamanho() * 100.0;
-
-    cout << "\nAciertos en tu prueba: " << aciertos << " de " << prueba.tamanho() << " (" << porcentaje << "%).\n";
+    cout << "Aciertos en tu prueba: " << aciertos << " de " << prueba.tamanho() << " (" << porcentaje << "%).\n";
 
     if (porcentaje < 10.0) {
-        cout << "Acertaste menos del 10%. Pistas de diferencia reveladas:\n";
-        cout << "Diferencia (S - P): ";
-        secreto.diferencia(prueba).imprimir();
-        cout << "Diferencia (P - S): ";
-        prueba.diferencia(secreto).imprimir();
-    } else {
-        cout << "Acertaste el 10% o mas. Se revela la interseccion:\n";
-        cout << "Interseccion (S n P): ";
-        inter.imprimir();
+        condicionDiferencia = true;
+        cout << ">> Has acertado menos del 10%. Ahora tienes habilitado el Reto de Diferencia!\n";
     }
 
-    pistasRestantes--;
-    cout << "Pistas restantes: " << pistasRestantes << "\n\n";
+    oportunidades--;
+    cout << "Oportunidades restantes de interseccion: " << oportunidades << "\n\n";
+}
+
+void ejecutarDiferencia(const Conjunto& secreto, bool& condicionDiferencia) {
+    if (!condicionDiferencia) {
+        cout << "\n[!] Todavia no puedes utilizar el reto de diferencia. Debes haber acertado menos del 10% de los numeros de tu conjunto de prueba.\n\n";
+        return;
+    }
+
+    cout << "\nCondicion cumplida (< 10% de aciertos). Define un nuevo Conjunto de Prueba P:\n";
+    Conjunto prueba = pedirConjuntoPrueba();
+
+    cout << "\n1. Ver diferencia S - P (elementos en secreto que no incluiste)\n";
+    cout << "2. Ver diferencia P - S (elementos propuestos que no estan en el secreto)\n";
+    cout << "3. Ver ambas diferencias\n";
+    cout << "Elige una opcion (1 - 3): ";
+    int opDif = 0;
+    cin >> opDif;
+
+    if (!validarRango(opDif, 1, 3)) {
+        return;
+    }
+
+    if (opDif == 1 || opDif == 3) {
+        cout << "Diferencia (S - P): ";
+        secreto.diferencia(prueba).imprimir();
+    }
+    if (opDif == 2 || opDif == 3) {
+        cout << "Diferencia (P - S): ";
+        prueba.diferencia(secreto).imprimir();
+    }
+
+    cout << "\n";
 }
 
 void iniciarJuego() {
@@ -138,14 +147,15 @@ void iniciarJuego() {
     generarConjuntoSecreto(secreto, CANTIDAD_SECRETOS);
 
     int intentos = 0;
-    int pistasRestantes = 3;
+    int oportunidadesInterseccion = 3;
+    bool condicionDiferencia = false;
 
     cout << "\nPartida iniciada.\n";
     cout << "Se han elegido " << secreto.tamanho() << " numeros secretos entre 0 y " << (TAM - 1) << ".\n\n";
 
     while (!secreto.esta_vazio()) {
-        mostrarEstado(secreto.tamanho(), intentos, pistasRestantes);
-        mostrarMenu();
+        mostrarEstado(secreto.tamanho(), intentos);
+        mostrarMenu(oportunidadesInterseccion);
 
         int opcion = 0;
         cin >> opcion;
@@ -157,9 +167,9 @@ void iniciarJuego() {
         if (opcion == 1) {
             ejecutarAdivinanza(secreto, intentos);
         } else if (opcion == 2) {
-            ejecutarInterseccion(secreto, pistasRestantes);
+            ejecutarInterseccion(secreto, oportunidadesInterseccion, condicionDiferencia);
         } else if (opcion == 3) {
-            ejecutarDiferencia(secreto, pistasRestantes);
+            ejecutarDiferencia(secreto, condicionDiferencia);
         } else if (opcion == 4) {
             cout << "\nHas decidido salir de la partida. Gracias por jugar!\n";
             cout << "Los numeros secretos eran: ";
