@@ -10,12 +10,12 @@ int pedirNumero(int min, int max);
 Conjunto pedirConjuntoPrueba();
 void generarConjuntoSecreto(Conjunto& conjunto, int cantidad);
 
-void mostrarEstado(int restantes, int intentos, int pistas);
-void mostrarMenu();
+void mostrarEstado(int restantes, int intentos);
+void mostrarMenu(int oportunidadesInterseccion);
 
 void ejecutarAdivinanza(Conjunto& secreto, int& intentos);
-void ejecutarInterseccion(const Conjunto& secreto, int& pistasRestantes);
-void ejecutarDiferencia(const Conjunto& secreto, int& pistasRestantes);
+void ejecutarInterseccion(const Conjunto& secreto, int& oportunidades, bool& condicionDiferencia);
+void ejecutarDiferencia(const Conjunto& secreto, bool& condicionDiferencia);
 
 void iniciarJuego();
 
