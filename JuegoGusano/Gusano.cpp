@@ -17,22 +17,14 @@ void Gusano::reiniciar(int inicioX, int inicioY) {
 }
 
 void Gusano::cambiarDireccion(char tecla) {
-    if (tecla == 'w' || tecla == 'W') {
-        if (longitud == 0 || cuerpoY[0] != y - 1) {
-            direccion = ARRIBA;
-        }
-    } else if (tecla == 's' || tecla == 'S') {
-        if (longitud == 0 || cuerpoY[0] != y + 1) {
-            direccion = ABAJO;
-        }
-    } else if (tecla == 'a' || tecla == 'A') {
-        if (longitud == 0 || cuerpoX[0] != x - 1) {
-            direccion = IZQUIERDA;
-        }
-    } else if (tecla == 'd' || tecla == 'D') {
-        if (longitud == 0 || cuerpoX[0] != x + 1) {
-            direccion = DERECHA;
-        }
+    if ((tecla == 'w' || tecla == 'W') && direccion != ABAJO) {
+        direccion = ARRIBA;
+    } else if ((tecla == 's' || tecla == 'S') && direccion != ARRIBA) {
+        direccion = ABAJO;
+    } else if ((tecla == 'a' || tecla == 'A') && direccion != DERECHA) {
+        direccion = IZQUIERDA;
+    } else if ((tecla == 'd' || tecla == 'D') && direccion != IZQUIERDA) {
+        direccion = DERECHA;
     }
 }
 
