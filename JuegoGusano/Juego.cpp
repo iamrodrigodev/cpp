@@ -15,8 +15,8 @@
 
 using namespace std;
 
-const int VELOCIDAD_HORIZONTAL_MS = 85;
-const int VELOCIDAD_VERTICAL_MS = 130;
+const int VELOCIDAD_HORIZONTAL_MS = 120;
+const int VELOCIDAD_VERTICAL_MS = 180;
 
 #ifndef _WIN32
 termios configOriginal;
