@@ -60,7 +60,6 @@ void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas,
                 bool esCuerpo = false;
                 for (int i = 0; i < gusano.getLongitud(); i++) {
                     if (gusano.getCuerpoX(i) == x && gusano.getCuerpoY(i) == y) {
-                        salida += "o";
                         esCuerpo = true;
                         break;
                     }
@@ -82,7 +81,7 @@ void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas,
     salida += "\nPuntuacion: " + to_string(puntuacion) + 
               " | Manzanas: " + to_string(manzanasComidas) + 
               " | Vidas: " + to_string(vidas) + 
-              " | Longitud: " + to_string(gusano.getLongitud() + 1) + "\033[K\n";
+              " | Longitud: " + to_string(gusano.getLongitud()) + "\033[K\n";
     salida += "Elementos: Manzana (@) | Cabeza (O) | Cuerpo (o)\033[K\n";
     if (gusano.getDireccion() == DETENIDO) {
         salida += "Presiona una flecha o W, A, S, D para iniciar | X (salir)\033[K\n";
