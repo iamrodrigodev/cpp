@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
-#include <windows.h>
 
 using namespace std;
 
@@ -51,12 +50,7 @@ bool Tablero::comioManzana(const Gusano& gusano) const {
 }
 
 void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas) const {
-    COORD coord;
-    coord.X = 0;
-    coord.Y = 0;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-
-    string salida = "";
+    string salida = "\033[H";
 
     for (int y = 0; y < ALTO_TABLERO; y++) {
         for (int x = 0; x < ANCHO_TABLERO; x++) {
