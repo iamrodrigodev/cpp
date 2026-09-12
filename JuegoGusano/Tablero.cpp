@@ -67,9 +67,9 @@ void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas,
     for (int y = 0; y < ALTO_TABLERO; y++) {
         for (int x = 0; x < ANCHO_TABLERO; x++) {
             if (y == 0 || y == ALTO_TABLERO - 1 || x == 0 || x == ANCHO_TABLERO - 1) {
-                cout << '#';
+                cout << "##";
             } else if (x == gusano.getX() && y == gusano.getY()) {
-                cout << 'O';
+                cout << "O ";
             } else {
                 bool esCuerpo = false;
                 for (int i = 0; i < gusano.getLongitud(); i++) {
@@ -79,11 +79,11 @@ void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas,
                     }
                 }
                 if (esCuerpo) {
-                    cout << 'o';
+                    cout << "o ";
                 } else if (x == manzanaX && y == manzanaY) {
-                    cout << '@';
+                    cout << "@ ";
                 } else {
-                    cout << ' ';
+                    cout << "  ";
                 }
             }
         }
