@@ -15,8 +15,8 @@
 
 using namespace std;
 
-const int VELOCIDAD_HORIZONTAL_MS = 110;
-const int VELOCIDAD_VERTICAL_MS = 175;
+const int VELOCIDAD_HORIZONTAL_MS = 85;
+const int VELOCIDAD_VERTICAL_MS = 130;
 
 #ifndef _WIN32
 termios configOriginal;
@@ -103,7 +103,7 @@ void mostrarGameOver(int puntuacion, int manzanasComidas) {
 void ejecutarPartida() {
     limpiarPantalla();
 
-    Gusano gusano(M / 2, M / 2);
+    Gusano gusano(ANCHO_TABLERO / 2, ALTO_TABLERO / 2);
     Tablero tablero;
     tablero.reiniciar(gusano);
 
@@ -115,17 +115,37 @@ void ejecutarPartida() {
     tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
 
     while (!juegoTerminado && vidas > 0) {
-        while (hayTecla()) {
-            char tecla = leerTecla();
-            if (tecla == 'x' || tecla == 'X') {
-                juegoTerminado = true;
-                break;
+        int retardo = (gusano.getDireccion() == ARRIBA || gusano.getDireccion() == ABAJO) 
+                      ? VELOCIDAD_VERTICAL_MS 
+                      : VELOCIDAD_HORIZONTAL_MS;
+
+        int pasos = retardo / 10;
+        if (pasos < 1) {
+            pasos = 1;
+        }
+
+        for (int i = 0; i < pasos; i++) {
+            if (hayTecla()) {
+                char tecla = leerTecla();
+                if (tecla == 'x' || tecla == 'X') {
+                    juegoTerminado = true;
+                    break;
+                }
+                Direccion dirAnterior = gusano.getDireccion();
+                gusano.cambiarDireccion(tecla);
+                if (gusano.getDireccion() != dirAnterior) {
+                    break;
+                }
             }
-            gusano.cambiarDireccion(tecla);
+            this_thread::sleep_for(chrono::milliseconds(10));
         }
 
         if (juegoTerminado) {
             break;
+        }
+
+        if (gusano.getDireccion() == DETENIDO) {
+            continue;
         }
 
         gusano.mover();
@@ -136,7 +156,7 @@ void ejecutarPartida() {
 
             if (vidas > 0) {
                 this_thread::sleep_for(chrono::milliseconds(800));
-                gusano.reiniciar(M / 2, M / 2);
+                gusano.reiniciar(ANCHO_TABLERO / 2, ALTO_TABLERO / 2);
                 tablero.generarManzana(gusano);
                 tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
                 continue;
@@ -154,11 +174,6 @@ void ejecutarPartida() {
         }
 
         tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
-
-        int retardo = (gusano.getDireccion() == ARRIBA || gusano.getDireccion() == ABAJO) 
-                      ? VELOCIDAD_VERTICAL_MS 
-                      : VELOCIDAD_HORIZONTAL_MS;
-        this_thread::sleep_for(chrono::milliseconds(retardo));
     }
 
     tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
