@@ -37,8 +37,21 @@ void Tablero::generarManzana(const Gusano& gusano) {
 }
 
 bool Tablero::hayColisionPared(const Gusano& gusano) const {
-    if (gusano.getX() <= 0 || gusano.getX() >= ANCHO_TABLERO - 1 ||
-        gusano.getY() <= 0 || gusano.getY() >= ALTO_TABLERO - 1) {
+    int proxX = gusano.getX();
+    int proxY = gusano.getY();
+
+    if (gusano.getDireccion() == ARRIBA) {
+        proxY--;
+    } else if (gusano.getDireccion() == ABAJO) {
+        proxY++;
+    } else if (gusano.getDireccion() == IZQUIERDA) {
+        proxX--;
+    } else if (gusano.getDireccion() == DERECHA) {
+        proxX++;
+    }
+
+    if (proxX <= 0 || proxX >= ANCHO_TABLERO - 1 ||
+        proxY <= 0 || proxY >= ALTO_TABLERO - 1) {
         return true;
     }
     return false;
@@ -53,7 +66,9 @@ void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas,
 
     for (int y = 0; y < ALTO_TABLERO; y++) {
         for (int x = 0; x < ANCHO_TABLERO; x++) {
-            if (x == gusano.getX() && y == gusano.getY()) {
+            if (y == 0 || y == ALTO_TABLERO - 1 || x == 0 || x == ANCHO_TABLERO - 1) {
+                cout << '#';
+            } else if (x == gusano.getX() && y == gusano.getY()) {
                 cout << 'O';
             } else {
                 bool esCuerpo = false;
@@ -65,8 +80,6 @@ void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas,
                 }
                 if (esCuerpo) {
                     cout << 'o';
-                } else if (y == 0 || y == ALTO_TABLERO - 1 || x == 0 || x == ANCHO_TABLERO - 1) {
-                    cout << '#';
                 } else if (x == manzanaX && y == manzanaY) {
                     cout << '@';
                 } else {

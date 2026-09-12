@@ -56,6 +56,13 @@ void Gusano::mover() {
 
 void Gusano::crecer() {
     if (longitud < MAX_CUERPO) {
+        if (longitud > 0) {
+            cuerpoX[longitud] = cuerpoX[longitud - 1];
+            cuerpoY[longitud] = cuerpoY[longitud - 1];
+        } else {
+            cuerpoX[0] = x;
+            cuerpoY[0] = y;
+        }
         longitud++;
     }
 }
@@ -65,8 +72,20 @@ bool Gusano::colisionaConCuerpo() const {
         return false;
     }
 
-    for (int i = 0; i < longitud; i++) {
-        if (x == cuerpoX[i] && y == cuerpoY[i]) {
+    int proxX = x;
+    int proxY = y;
+    if (direccion == ARRIBA) {
+        proxY--;
+    } else if (direccion == ABAJO) {
+        proxY++;
+    } else if (direccion == IZQUIERDA) {
+        proxX--;
+    } else if (direccion == DERECHA) {
+        proxX++;
+    }
+
+    for (int i = 0; i < longitud - 1; i++) {
+        if (proxX == cuerpoX[i] && proxY == cuerpoY[i]) {
             return true;
         }
     }

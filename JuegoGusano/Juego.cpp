@@ -155,8 +155,6 @@ void ejecutarPartida() {
             continue;
         }
 
-        gusano.mover();
-
         if (tablero.hayColisionPared(gusano) || gusano.colisionaConCuerpo()) {
             vidas--;
             tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
@@ -172,6 +170,8 @@ void ejecutarPartida() {
                 break;
             }
         }
+
+        gusano.mover();
 
         if (tablero.comioManzana(gusano)) {
             gusano.crecer();
