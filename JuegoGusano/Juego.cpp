@@ -102,7 +102,7 @@ void mostrarGameOver(int puntuacion, int manzanasComidas) {
 void ejecutarPartida() {
     limpiarPantalla();
 
-    Gusano gusano(ANCHO_TABLERO / 2, ALTO_TABLERO / 2);
+    Gusano gusano(M / 2, M / 2);
     Tablero tablero;
     tablero.reiniciar(gusano);
 
@@ -135,7 +135,7 @@ void ejecutarPartida() {
 
             if (vidas > 0) {
                 this_thread::sleep_for(chrono::milliseconds(800));
-                gusano.reiniciar(ANCHO_TABLERO / 2, ALTO_TABLERO / 2);
+                gusano.reiniciar(M / 2, M / 2);
                 tablero.generarManzana(gusano);
                 tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
                 continue;
