@@ -18,8 +18,8 @@ void Tablero::generarManzana(const Gusano& gusano) {
     bool ocupado = true;
 
     while (ocupado) {
-        manzanaX = 1 + rand() % (M - 2);
-        manzanaY = 1 + rand() % (M - 2);
+        manzanaX = 1 + rand() % (ANCHO_TABLERO - 2);
+        manzanaY = 1 + rand() % (ALTO_TABLERO - 2);
 
         ocupado = false;
 
@@ -38,8 +38,8 @@ void Tablero::generarManzana(const Gusano& gusano) {
 }
 
 bool Tablero::hayColisionPared(const Gusano& gusano) const {
-    if (gusano.getX() <= 0 || gusano.getX() >= M - 1 ||
-        gusano.getY() <= 0 || gusano.getY() >= M - 1) {
+    if (gusano.getX() <= 0 || gusano.getX() >= ANCHO_TABLERO - 1 ||
+        gusano.getY() <= 0 || gusano.getY() >= ALTO_TABLERO - 1) {
         return true;
     }
     return false;
@@ -52,8 +52,8 @@ bool Tablero::comioManzana(const Gusano& gusano) const {
 void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas, int vidas) const {
     string salida = "\033[H";
 
-    for (int y = 0; y < M; y++) {
-        for (int x = 0; x < M; x++) {
+    for (int y = 0; y < ALTO_TABLERO; y++) {
+        for (int x = 0; x < ANCHO_TABLERO; x++) {
             if (x == gusano.getX() && y == gusano.getY()) {
                 salida += "O";
             } else {
@@ -66,7 +66,7 @@ void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas,
                 }
                 if (esCuerpo) {
                     salida += "o";
-                } else if (y == 0 || y == M - 1 || x == 0 || x == M - 1) {
+                } else if (y == 0 || y == ALTO_TABLERO - 1 || x == 0 || x == ANCHO_TABLERO - 1) {
                     salida += "#";
                 } else if (x == manzanaX && y == manzanaY) {
                     salida += "@";
