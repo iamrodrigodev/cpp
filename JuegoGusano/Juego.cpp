@@ -15,8 +15,8 @@
 
 using namespace std;
 
-const int VELOCIDAD_HORIZONTAL_MS = 120;
-const int VELOCIDAD_VERTICAL_MS = 180;
+const int VELOCIDAD_HORIZONTAL_MS = 160;
+const int VELOCIDAD_VERTICAL_MS = 220;
 
 #ifndef _WIN32
 termios configOriginal;
@@ -124,6 +124,8 @@ void ejecutarPartida() {
             pasos = 1;
         }
 
+        bool direccionCambiada = false;
+
         for (int i = 0; i < pasos; i++) {
             if (hayTecla()) {
                 char tecla = leerTecla();
@@ -131,10 +133,15 @@ void ejecutarPartida() {
                     juegoTerminado = true;
                     break;
                 }
-                Direccion dirAnterior = gusano.getDireccion();
-                gusano.cambiarDireccion(tecla);
-                if (gusano.getDireccion() != dirAnterior) {
-                    break;
+                if (!direccionCambiada) {
+                    Direccion dirAnterior = gusano.getDireccion();
+                    gusano.cambiarDireccion(tecla);
+                    if (gusano.getDireccion() != dirAnterior) {
+                        direccionCambiada = true;
+                        if (dirAnterior == DETENIDO) {
+                            break;
+                        }
+                    }
                 }
             }
             this_thread::sleep_for(chrono::milliseconds(10));
