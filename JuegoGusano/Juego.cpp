@@ -15,7 +15,8 @@
 
 using namespace std;
 
-const int VELOCIDAD_MS = 120;
+const int VELOCIDAD_HORIZONTAL_MS = 110;
+const int VELOCIDAD_VERTICAL_MS = 175;
 
 #ifndef _WIN32
 termios configOriginal;
@@ -153,7 +154,11 @@ void ejecutarPartida() {
         }
 
         tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
-        this_thread::sleep_for(chrono::milliseconds(VELOCIDAD_MS));
+
+        int retardo = (gusano.getDireccion() == ARRIBA || gusano.getDireccion() == ABAJO) 
+                      ? VELOCIDAD_VERTICAL_MS 
+                      : VELOCIDAD_HORIZONTAL_MS;
+        this_thread::sleep_for(chrono::milliseconds(retardo));
     }
 
     tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
