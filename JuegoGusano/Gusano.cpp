@@ -7,15 +7,10 @@ Gusano::Gusano(int inicioX, int inicioY) {
 void Gusano::reiniciar(int inicioX, int inicioY) {
     x = inicioX;
     y = inicioY;
-    longitud = 2;
+    longitud = 0;
     direccion = DETENIDO;
 
-    cuerpoX[0] = inicioX - 1;
-    cuerpoY[0] = inicioY;
-    cuerpoX[1] = inicioX - 2;
-    cuerpoY[1] = inicioY;
-
-    for (int i = 2; i < MAX_CUERPO; i++) {
+    for (int i = 0; i < MAX_CUERPO; i++) {
         cuerpoX[i] = 0;
         cuerpoY[i] = 0;
     }
