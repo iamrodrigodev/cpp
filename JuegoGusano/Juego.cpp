@@ -15,7 +15,7 @@
 
 using namespace std;
 
-const int VELOCIDAD_MS = 180;
+const int VELOCIDAD_MS = 120;
 
 #ifndef _WIN32
 termios configOriginal;
@@ -108,11 +108,12 @@ void ejecutarPartida() {
 
     int puntuacion = 0;
     int manzanasComidas = 0;
+    int vidas = 3;
     bool juegoTerminado = false;
 
-    while (!juegoTerminado) {
-        tablero.dibujar(gusano, puntuacion, manzanasComidas);
+    tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
 
+    while (!juegoTerminado && vidas > 0) {
         while (hayTecla()) {
             char tecla = leerTecla();
             if (tecla == 'x' || tecla == 'X') {
@@ -129,8 +130,19 @@ void ejecutarPartida() {
         gusano.mover();
 
         if (tablero.hayColisionPared(gusano) || gusano.colisionaConCuerpo()) {
-            juegoTerminado = true;
-            break;
+            vidas--;
+            tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
+
+            if (vidas > 0) {
+                this_thread::sleep_for(chrono::milliseconds(800));
+                gusano.reiniciar(ANCHO_TABLERO / 2, ALTO_TABLERO / 2);
+                tablero.generarManzana(gusano);
+                tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
+                continue;
+            } else {
+                juegoTerminado = true;
+                break;
+            }
         }
 
         if (tablero.comioManzana(gusano)) {
@@ -140,10 +152,11 @@ void ejecutarPartida() {
             tablero.generarManzana(gusano);
         }
 
+        tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
         this_thread::sleep_for(chrono::milliseconds(VELOCIDAD_MS));
     }
 
-    tablero.dibujar(gusano, puntuacion, manzanasComidas);
+    tablero.dibujar(gusano, puntuacion, manzanasComidas, vidas);
     mostrarGameOver(puntuacion, manzanasComidas);
 }
 

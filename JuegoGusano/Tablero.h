@@ -17,7 +17,7 @@ public:
     void generarManzana(const Gusano& gusano);
     bool hayColisionPared(const Gusano& gusano) const;
     bool comioManzana(const Gusano& gusano) const;
-    void dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas) const;
+    void dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas, int vidas) const;
     int getManzanaX() const;
     int getManzanaY() const;
 };
