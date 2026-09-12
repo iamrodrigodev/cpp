@@ -49,17 +49,13 @@ bool Tablero::comioManzana(const Gusano& gusano) const {
     return (gusano.getX() == manzanaX && gusano.getY() == manzanaY);
 }
 
-void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas) const {
+void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas, int vidas) const {
     string salida = "\033[H";
 
     for (int y = 0; y < ALTO_TABLERO; y++) {
         for (int x = 0; x < ANCHO_TABLERO; x++) {
-            if (y == 0 || y == ALTO_TABLERO - 1 || x == 0 || x == ANCHO_TABLERO - 1) {
-                salida += "#";
-            } else if (x == gusano.getX() && y == gusano.getY()) {
+            if (x == gusano.getX() && y == gusano.getY()) {
                 salida += "O";
-            } else if (x == manzanaX && y == manzanaY) {
-                salida += "@";
             } else {
                 bool esCuerpo = false;
                 for (int i = 0; i < gusano.getLongitud(); i++) {
@@ -69,22 +65,29 @@ void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas)
                         break;
                     }
                 }
-                if (!esCuerpo) {
+                if (esCuerpo) {
+                    salida += "o";
+                } else if (y == 0 || y == ALTO_TABLERO - 1 || x == 0 || x == ANCHO_TABLERO - 1) {
+                    salida += "#";
+                } else if (x == manzanaX && y == manzanaY) {
+                    salida += "@";
+                } else {
                     salida += " ";
                 }
             }
         }
-        salida += "\n";
+        salida += "\033[K\n";
     }
 
     salida += "\nPuntuacion: " + to_string(puntuacion) + 
               " | Manzanas: " + to_string(manzanasComidas) + 
-              " | Longitud: " + to_string(gusano.getLongitud()) + "\n";
-    salida += "Elementos: Manzana (@) | Cabeza (O) | Cuerpo (o)\n";
+              " | Vidas: " + to_string(vidas) + 
+              " | Longitud: " + to_string(gusano.getLongitud() + 1) + "\033[K\n";
+    salida += "Elementos: Manzana (@) | Cabeza (O) | Cuerpo (o)\033[K\n";
     if (gusano.getDireccion() == DETENIDO) {
-        salida += "Presiona una flecha o W, A, S, D para iniciar | X (salir)\n";
+        salida += "Presiona una flecha o W, A, S, D para iniciar | X (salir)\033[K\n";
     } else {
-        salida += "Controles: Flechas o W, A, S, D | X (salir)\n";
+        salida += "Controles: Flechas o W, A, S, D | X (salir)\033[K\n";
     }
 
     cout << salida;

@@ -7,24 +7,37 @@ Gusano::Gusano(int inicioX, int inicioY) {
 void Gusano::reiniciar(int inicioX, int inicioY) {
     x = inicioX;
     y = inicioY;
-    longitud = 0;
+    longitud = 2;
     direccion = DETENIDO;
 
-    for (int i = 0; i < MAX_CUERPO; i++) {
+    cuerpoX[0] = inicioX - 1;
+    cuerpoY[0] = inicioY;
+    cuerpoX[1] = inicioX - 2;
+    cuerpoY[1] = inicioY;
+
+    for (int i = 2; i < MAX_CUERPO; i++) {
         cuerpoX[i] = 0;
         cuerpoY[i] = 0;
     }
 }
 
 void Gusano::cambiarDireccion(char tecla) {
-    if ((tecla == 'w' || tecla == 'W') && direccion != ABAJO) {
-        direccion = ARRIBA;
-    } else if ((tecla == 's' || tecla == 'S') && direccion != ARRIBA) {
-        direccion = ABAJO;
-    } else if ((tecla == 'a' || tecla == 'A') && direccion != DERECHA) {
-        direccion = IZQUIERDA;
-    } else if ((tecla == 'd' || tecla == 'D') && direccion != IZQUIERDA) {
-        direccion = DERECHA;
+    if (tecla == 'w' || tecla == 'W') {
+        if (longitud == 0 || cuerpoY[0] != y - 1) {
+            direccion = ARRIBA;
+        }
+    } else if (tecla == 's' || tecla == 'S') {
+        if (longitud == 0 || cuerpoY[0] != y + 1) {
+            direccion = ABAJO;
+        }
+    } else if (tecla == 'a' || tecla == 'A') {
+        if (longitud == 0 || cuerpoX[0] != x - 1) {
+            direccion = IZQUIERDA;
+        }
+    } else if (tecla == 'd' || tecla == 'D') {
+        if (longitud == 0 || cuerpoX[0] != x + 1) {
+            direccion = DERECHA;
+        }
     }
 }
 
