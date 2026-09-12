@@ -3,8 +3,7 @@
 
 #include "Gusano.h"
 
-const int ANCHO_TABLERO = 30;
-const int ALTO_TABLERO = 20;
+const int M = 20;
 
 class Tablero {
 private:
