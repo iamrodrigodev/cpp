@@ -15,11 +15,26 @@
 
 using namespace std;
 
+const int VELOCIDAD_MS = 180;
+
+#ifndef _WIN32
+termios configOriginal;
+#endif
+
 void configurarConsola() {
+#ifndef _WIN32
+    tcgetattr(STDIN_FILENO, &configOriginal);
+    termios configModificada = configOriginal;
+    configModificada.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &configModificada);
+#endif
     cout << "\033[?25l";
 }
 
 void restaurarConsola() {
+#ifndef _WIN32
+    tcsetattr(STDIN_FILENO, TCSANOW, &configOriginal);
+#endif
     cout << "\033[?25h";
 }
 
@@ -43,16 +58,31 @@ bool hayTecla() {
 
 char leerTecla() {
 #ifdef _WIN32
-    return _getch();
+    int ch = _getch();
+    if (ch == 0 || ch == 224) {
+        int flecha = _getch();
+        if (flecha == 72) return 'w';
+        if (flecha == 80) return 's';
+        if (flecha == 75) return 'a';
+        if (flecha == 77) return 'd';
+    }
+    return (char)ch;
 #else
     char ch = 0;
-    termios oldt, newt;
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    read(STDIN_FILENO, &ch, 1);
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    if (read(STDIN_FILENO, &ch, 1) <= 0) {
+        return 0;
+    }
+    if (ch == 27) {
+        char seq[2];
+        if (read(STDIN_FILENO, &seq[0], 1) > 0 && read(STDIN_FILENO, &seq[1], 1) > 0) {
+            if (seq[0] == '[') {
+                if (seq[1] == 'A') return 'w';
+                if (seq[1] == 'B') return 's';
+                if (seq[1] == 'D') return 'a';
+                if (seq[1] == 'C') return 'd';
+            }
+        }
+    }
     return ch;
 #endif
 }
@@ -83,13 +113,17 @@ void ejecutarPartida() {
     while (!juegoTerminado) {
         tablero.dibujar(gusano, puntuacion, manzanasComidas);
 
-        if (hayTecla()) {
+        while (hayTecla()) {
             char tecla = leerTecla();
             if (tecla == 'x' || tecla == 'X') {
                 juegoTerminado = true;
                 break;
             }
             gusano.cambiarDireccion(tecla);
+        }
+
+        if (juegoTerminado) {
+            break;
         }
 
         gusano.mover();
@@ -106,7 +140,7 @@ void ejecutarPartida() {
             tablero.generarManzana(gusano);
         }
 
-        this_thread::sleep_for(chrono::milliseconds(80));
+        this_thread::sleep_for(chrono::milliseconds(VELOCIDAD_MS));
     }
 
     tablero.dibujar(gusano, puntuacion, manzanasComidas);
@@ -121,10 +155,15 @@ void iniciarJuego() {
     while (opcion == 's' || opcion == 'S') {
         ejecutarPartida();
 
+        restaurarConsola();
         vaciarBufferTeclas();
 
         cout << "Deseas jugar otra partida? (S / N): ";
         cin >> opcion;
+
+        if (opcion == 's' || opcion == 'S') {
+            configurarConsola();
+        }
     }
 
     restaurarConsola();

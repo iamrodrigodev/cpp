@@ -59,7 +59,7 @@ void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas)
             } else if (x == gusano.getX() && y == gusano.getY()) {
                 salida += "O";
             } else if (x == manzanaX && y == manzanaY) {
-                salida += "*";
+                salida += "@";
             } else {
                 bool esCuerpo = false;
                 for (int i = 0; i < gusano.getLongitud(); i++) {
@@ -80,7 +80,12 @@ void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas)
     salida += "\nPuntuacion: " + to_string(puntuacion) + 
               " | Manzanas: " + to_string(manzanasComidas) + 
               " | Longitud: " + to_string(gusano.getLongitud()) + "\n";
-    salida += "Controles: W (arriba), S (abajo), A (izquierda), D (derecha) | X (salir)\n";
+    salida += "Elementos: Manzana (@) | Cabeza (O) | Cuerpo (o)\n";
+    if (gusano.getDireccion() == DETENIDO) {
+        salida += "Presiona una flecha o W, A, S, D para iniciar | X (salir)\n";
+    } else {
+        salida += "Controles: Flechas o W, A, S, D | X (salir)\n";
+    }
 
     cout << salida;
 }
