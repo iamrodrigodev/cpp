@@ -1,7 +1,6 @@
 #include "Tablero.h"
 #include <iostream>
 #include <cstdlib>
-#include <string>
 
 using namespace std;
 
@@ -50,12 +49,12 @@ bool Tablero::comioManzana(const Gusano& gusano) const {
 }
 
 void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas, int vidas) const {
-    string salida = "\033[H";
+    cout << "\033[H";
 
     for (int y = 0; y < ALTO_TABLERO; y++) {
         for (int x = 0; x < ANCHO_TABLERO; x++) {
             if (x == gusano.getX() && y == gusano.getY()) {
-                salida += "O";
+                cout << 'O';
             } else {
                 bool esCuerpo = false;
                 for (int i = 0; i < gusano.getLongitud(); i++) {
@@ -65,31 +64,29 @@ void Tablero::dibujar(const Gusano& gusano, int puntuacion, int manzanasComidas,
                     }
                 }
                 if (esCuerpo) {
-                    salida += "o";
+                    cout << 'o';
                 } else if (y == 0 || y == ALTO_TABLERO - 1 || x == 0 || x == ANCHO_TABLERO - 1) {
-                    salida += "#";
+                    cout << '#';
                 } else if (x == manzanaX && y == manzanaY) {
-                    salida += "@";
+                    cout << '@';
                 } else {
-                    salida += " ";
+                    cout << ' ';
                 }
             }
         }
-        salida += "\033[K\n";
+        cout << "\033[K\n";
     }
 
-    salida += "\nPuntuacion: " + to_string(puntuacion) + 
-              " | Manzanas: " + to_string(manzanasComidas) + 
-              " | Vidas: " + to_string(vidas) + 
-              " | Longitud: " + to_string(gusano.getLongitud()) + "\033[K\n";
-    salida += "Elementos: Manzana (@) | Cabeza (O) | Cuerpo (o)\033[K\n";
+    cout << "\nPuntuacion: " << puntuacion 
+         << " | Manzanas: " << manzanasComidas 
+         << " | Vidas: " << vidas 
+         << " | Longitud: " << gusano.getLongitud() << "\033[K\n";
+    cout << "Elementos: Manzana (@) | Cabeza (O) | Cuerpo (o)\033[K\n";
     if (gusano.getDireccion() == DETENIDO) {
-        salida += "Presiona una flecha o W, A, S, D para iniciar | X (salir)\033[K\n";
+        cout << "Presiona una flecha o W, A, S, D para iniciar | X (salir)\033[K\n";
     } else {
-        salida += "Controles: Flechas o W, A, S, D | X (salir)\033[K\n";
+        cout << "Controles: Flechas o W, A, S, D | X (salir)\033[K\n";
     }
-
-    cout << salida;
 }
 
 int Tablero::getManzanaX() const {
