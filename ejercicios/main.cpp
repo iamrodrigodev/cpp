@@ -25,43 +25,19 @@ void imprimirArray(const int arr[], int n) {
 }
 
 int main() {
-    int n;
-    cout << "Ingrese la cantidad de elementos (0 para usar el ejemplo): ";
-    if (!(cin >> n) || n <= 0) {
-        int arr[] = {1, 2, 3, 4, 5};
-        int tam = 5;
-
-        int parte1[100];
-        int parte2[100];
-        int n1 = 0;
-        int n2 = 0;
-
-        split(arr, tam, parte1, n1, parte2, n2);
-
-        cout << "\nEntrada:\n";
-        imprimirArray(arr, tam);
-        cout << "Salida:\n";
-        imprimirArray(parte1, n1);
-        imprimirArray(parte2, n2);
-
-        return 0;
-    }
-
-    int arr[100];
-    cout << "Ingrese los " << n << " elementos: ";
-    for (int i = 0; i < n; i++) {
-        cin >> arr[i];
-    }
+    int arr[] = {1, 2, 3, 4, 5};
+    int n = sizeof(arr) / sizeof(arr[0]);
 
     int parte1[100];
     int parte2[100];
     int n1 = 0;
     int n2 = 0;
 
+    cout << "Entrada:\n";
+    imprimirArray(arr, n);
+
     split(arr, n, parte1, n1, parte2, n2);
 
-    cout << "\nEntrada:\n";
-    imprimirArray(arr, n);
     cout << "Salida:\n";
     imprimirArray(parte1, n1);
     imprimirArray(parte2, n2);
